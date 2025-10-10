@@ -1,4 +1,5 @@
 using UnityEngine;
+using DoorScript;
 
 [RequireComponent(typeof(CharacterController))]
 public class HeroController : MonoBehaviour
@@ -6,7 +7,7 @@ public class HeroController : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 200f;
     public float jumpHeight = 2f;
-    public float gravity = -12f;
+    public float gravity = -15f;
     public Transform cameraTransform; // referensi kamera di dalam Hero
     public float lookSpeed = 2f;
     public float lookXLimit = 80f;
@@ -81,5 +82,24 @@ public class HeroController : MonoBehaviour
         // ===== Gravitasi =====
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        // ======== Door Interaction ========
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 3f)) // 3f = jarak interaksi
+            {
+                Door door = hit.collider.GetComponent<Door>();
+                if (door != null)
+                {
+                    door.OpenDoor(); // panggil fungsi dari script door
+                }
+            }
+        }
+
     }
+
+    
 }
